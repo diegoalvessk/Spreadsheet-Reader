@@ -60,3 +60,35 @@ GetDoc(spreadsheetId)
   });
 
 
+  async function ReadWorkSheet(doc, sheetIndex = 0) {
+    try {
+      // Acessar a planilha específica pelo índice.
+      const sheet = doc.sheetsByIndex[sheetIndex];
+  
+      // Colher as informações das linhas.
+      const rows = await sheet.getRows();
+  
+      // Criar uma lista de objetos de usuário com as informações obtidas.
+      const users = rows.map(row => row._rawData);
+  
+      // Retorna a lista de objetos de usuário.
+      return users;
+    } catch (error) {
+      // Caso haja algum erro durante o processo, ele será exibido aqui.
+      console.error('Erro ao ler a planilha:', error);
+      throw error; // Relançar o erro para ser tratado por quem chamar ReadWorkSheet.
+    }
+  }
+  
+  // Supondo que você já tenha o 'doc' de GetDoc(spreadsheetId).
+  GetDoc(spreadsheetId)
+    .then(async doc => {
+      const users = await ReadWorkSheet(doc); // Chama a função para a primeira planilha (índice 0).
+      console.log(users); // Exibe a lista de objetos de usuário.
+    })
+    .catch(error => {
+      console.error('Erro ao obter os dados da planilha:', error);
+    });
+  
+
+
